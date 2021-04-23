@@ -1,1 +1,0 @@
-# multi_step_form_registration
