@@ -1,76 +1,83 @@
 import { useForm } from 'react-hook-form';
 import { Form, Button } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom'
-const SecondStep = () => {
-    const history = useHistory()
+import { useHistory } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+const SecondStep = (props) => {
+  const history = useHistory();
+  const { user, updateUser } = props;
 
-    const onSubmit = (data) => {
-        console.log(data);
-        history.push('/third')
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      user_email: user.user_email,
+      user_password: user.user_password,
+    },
+  });
 
-    return (
-        <Form className='input-form' onSubmit={handleSubmit(onSubmit)}>
-            <div className='col-md-6 offset-md-3'>
-                <Form.Group controlId='first_name'>
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        type='email'
-                        name='user_email'
-                        placeholder='Enter your email address'
-                        autoComplete='off'
-                        {...register('user_email', {
-                            required: 'Email is required',
-                            pattern: {
-                                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                                message: 'Email is not valid',
-                            },
-                        })}
-                        className={`${
-                            errors.user_email ? 'input-error' : ''
-                        }`}
-                    />
-                    {errors.user_email && (
-                        <p className='errorMsg'>{errors.user_email.message}</p>
-                    )}
-                </Form.Group>
-                <Form.Group controlId='password'>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type='password'
-                        name='user_password'
-                        placeholder='Choose a password'
-                        autoComplete='off'
-                        {...register('password', {
-                            required: 'Password is required.',
-                            minLength: {
-                                value: 6,
-                                message:
-                                    'Password should have at-least 6 characters.',
-                            },
-                        })}
-                        className={`${
-                            errors.user_password ? 'input-error' : ''
-                        }`}
-                    />
-                    {errors.user_password && (
-                        <p className='errorMsg'>
-                            {errors.user_password.message}
-                        </p>
-                    )}
-                </Form.Group>
-                <Button variant='primary' type='submit'>
-                    Next
-                </Button>
-            </div>
-        </Form>
-    );
+  const onSubmit = (data) => {
+    updateUser(data);
+    history.push('/third');
+  };
+
+  return (
+    <Form className='input-form' onSubmit={handleSubmit(onSubmit)}>
+      <motion.div
+        className='col-md-6 offset-md-3'
+        initial={{ x: '-100vw' }}
+        animate={{ x: 0 }}
+        transition={{ stiffness: 150 }}
+      >
+        {' '}
+        <Form.Group controlId='first_name'>
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type='email'
+            name='user_email'
+            placeholder='Enter your email address'
+            autoComplete='off'
+            {...register('user_email', {
+              required: 'Email is required',
+              pattern: {
+                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                message: 'Email is not valid',
+              },
+            })}
+            className={`${errors.user_email ? 'input-error' : ''}`}
+          />
+          {errors.user_email && (
+            <p className='errorMsg'>{errors.user_email.message}</p>
+          )}
+        </Form.Group>
+        <Form.Group controlId='password'>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type='password'
+            name='user_password'
+            placeholder='Choose a password'
+            autoComplete='off'
+            {...register('password', {
+              required: 'Password is required.',
+              minLength: {
+                value: 6,
+                message: 'Password should have at-least 6 characters.',
+              },
+            })}
+            className={`${errors.user_password ? 'input-error' : ''}`}
+          />
+          {errors.user_password && (
+            <p className='errorMsg'>{errors.user_password.message}</p>
+          )}
+        </Form.Group>
+        <Button variant='primary' type='submit'>
+          Next
+        </Button>
+      </motion.div>
+    </Form>
+  );
 };
 
 export default SecondStep;

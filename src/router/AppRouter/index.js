@@ -1,22 +1,46 @@
-import {BrowserRouter, Route, Switch} from 'react-router-dom'
-import Header from './../../components/Header'
-import FirstStep from './../../components/FirstStep'
-import SecondStep from './../../components/SecondStep'
-import ThirdStep from './../../components/ThirdStep'
+import { useState } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Header from './../../components/Header';
+import FirstStep from './../../components/FirstStep';
+import SecondStep from './../../components/SecondStep';
+import ThirdStep from './../../components/ThirdStep';
 
 const AppRouter = () => {
-  return (
-      <BrowserRouter>
-        <div className='container'>
-          <Header />
-          <Switch>
-            <Route exact path='/' component={FirstStep} />
-            <Route path='/second' component={SecondStep} />
-            <Route path='/third' component={ThirdStep} />
-          </Switch>
-        </div>
-      </BrowserRouter>
-  )
-}
+  const [user, setUser] = useState({});
 
-export default AppRouter
+  const updateUser = (data) => {
+    setUser((prevUser) => ({ ...prevUser, ...data }));
+  };
+
+  const resetUser = () => {
+    setUser({});
+  };
+  return (
+    <BrowserRouter>
+      <div className='container'>
+        <Header />
+        <Switch>
+          <Route
+            exact
+            path='/'
+            render={(props) => (
+              <FirstStep {...props} user={user} updateUser={updateUser} />
+            )}
+          />
+          <Route
+            path='/second'
+            render={(props) => (
+              <SecondStep {...props} user={user} updateUser={updateUser} />
+            )}
+          />
+          <Route
+            path='/third'
+            render={(props) => <ThirdStep {...props} user={user} />}
+          />
+        </Switch>
+      </div>
+    </BrowserRouter>
+  );
+};
+
+export default AppRouter;
