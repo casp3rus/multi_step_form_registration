@@ -15,6 +15,7 @@ const AppRouter = () => {
   const resetUser = () => {
     setUser({});
   };
+
   return (
     <BrowserRouter>
       <div className='container'>
@@ -35,7 +36,14 @@ const AppRouter = () => {
           />
           <Route
             path='/third'
-            render={(props) => <ThirdStep {...props} user={user} />}
+            render={(props) => (
+              <ThirdStep
+                {...props}
+                user={user}
+                updateUser={updateUser}
+                resetUser={resetUser}
+              />
+            )}
           />
         </Switch>
       </div>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import csc from 'country-state-city';
+import axios from 'axios';
+import { BASE_API_URL } from './../../utils';
 import { motion } from 'framer-motion';
+import Swal from 'sweetalert2';
+import { useHistory } from 'react-router-dom';
 
-
-
-const ThirdStep = () => {
+const ThirdStep = (props) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -14,6 +16,8 @@ const ThirdStep = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+
+  const history = useHistory();
 
   useEffect(() => {
     const getCountries = async () => {
@@ -29,11 +33,9 @@ const ThirdStep = () => {
         setCountries(allCountries);
         setSelectedCountry(firstCountry);
         setIsLoading(false);
-        // console.log(result);
       } catch (error) {
         setCountries([]);
         setIsLoading(false);
-        // console.log(error)
       }
     };
     getCountries();
@@ -48,7 +50,6 @@ const ThirdStep = () => {
           isoCode,
           name,
         }));
-        console.log({ allStates });
         const [{ isoCode: firstState = '' } = {}] = allStates;
         setCities([]);
         setSelectedCity('');
@@ -58,7 +59,6 @@ const ThirdStep = () => {
         setStates([]);
         setCities([]);
         setSelectedCity('');
-        //   console.log(error)
       }
     };
     getStates();
@@ -79,7 +79,6 @@ const ThirdStep = () => {
         setCities(allCities);
         setSelectedCity(firstCity);
       } catch (error) {
-        // console.log(error)
         setCities([]);
       }
     };
@@ -88,6 +87,40 @@ const ThirdStep = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const { user, resetUser } = props;
+      const updatedData = {
+        country: countries.find(
+          (country) => country.isoCode === selectedCountry
+        )?.name,
+        state:
+          states.find((state) => state.isoCode === selectedState)?.name || '', // or condition added because selectedState might come as undefined
+        city: selectedCity,
+      };
+
+      await axios.post(`${BASE_API_URL}/register`, {
+        ...user,
+        ...updatedData,
+      });
+      Swal.fire('Awesome!', "You're successfully registered!", 'success').then(
+        (result) => {
+          if (result.isConfirmed || result.isDismissed) {
+            resetUser();
+            history.push('/');
+          }
+        }
+      );
+    } catch (error) {
+      if (error.response) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.response.data,
+        });
+        console.log('error', error.response.data);
+      }
+    }
   };
 
   return (
