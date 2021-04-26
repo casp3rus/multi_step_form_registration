@@ -31,6 +31,9 @@ const Progress = ({ location: { pathname } }) => {
             <div>3</div>
             <div>Step 3</div>
           </div>
+          <div className='step active'>
+              <Link to='/login'>Check registration</Link>
+          </div>
         </div>
       ) : (
         <div></div>

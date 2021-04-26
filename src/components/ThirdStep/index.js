@@ -107,7 +107,7 @@ const ThirdStep = (props) => {
         (result) => {
           if (result.isConfirmed || result.isDismissed) {
             resetUser();
-            history.push('/');
+            history.push('/login');
           }
         }
       );

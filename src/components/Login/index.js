@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Form, Button } from 'react-bootstrap';
+import { Alert, Form, Table, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { BASE_API_URL } from './../../utils';
+import { motion } from 'framer-motion';
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       user_email: '',
       user_password: '',
@@ -16,8 +21,6 @@ const Login = () => {
   const [userDetails, setUserDetails] = useState('');
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     try {
       const response = await axios.post(`${BASE_API_URL}/login`, data);
       setSuccessMessage('User with the provided credentials found.');
@@ -25,7 +28,6 @@ const Login = () => {
       setUserDetails(response.data);
     } catch (error) {
       if (error.response) {
-        console.log('error', error.response.data);
         setErrorMessage(error.response.data);
       }
     }
@@ -33,23 +35,48 @@ const Login = () => {
 
   return (
     <Form className='input-form' onSubmit={handleSubmit(onSubmit)}>
-      <div className='col-md-6 offset-md-3'>
+      <motion.div
+        className='col-md-6 offset-md-3'
+        initial={{ x: '-100vw' }}
+        animate={{ x: 0 }}
+        transition={{ stiffness: 150 }}
+      >
         {errorMessage ? (
-          <p className='errorMsg login-error'>{errorMessage}</p>
+          <Alert variant='danger'>{errorMessage}</Alert>
         ) : (
           <div>
-            <p className='successMsg'>{successMessage}</p>
-
-            {userDetails && (
-              <div className='user-details'>
-                <p>Following are the user details:</p>
-                <div>First name: {userDetails.first_name}</div>
-                <div>Last name: {userDetails.last_name}</div>
-                <div>Email: {userDetails.user_email}</div>
-                <div>Country: {userDetails.country}</div>
-                <div>State: {userDetails.state}</div>
-                <div>City: {userDetails.city}</div>
-              </div>
+            {userDetails && (  
+            <div>
+            <Alert variant='success'>{successMessage}</Alert>
+            <Table striped bordered hover size="sm">
+              <tbody>
+                <tr>
+                  <td>First name</td>
+                  <td>{userDetails.first_name}</td>
+                </tr>
+                <tr>
+                  <td>Last name</td>
+                  <td>{userDetails.last_name}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>{userDetails.user_email}</td>
+                </tr>
+                <tr>
+                  <td>Country</td>
+                  <td>{userDetails.country}</td>
+                </tr>
+                <tr>
+                  <td>State / County</td>
+                  <td>{userDetails.state}</td>
+                </tr>
+                <tr>
+                  <td>City</td>
+                  <td>{userDetails.city}</td>
+                </tr>
+              </tbody>
+            </Table>
+            </div>
             )}
           </div>
         )}
@@ -96,7 +123,7 @@ const Login = () => {
         <Button variant='primary' type='submit'>
           Check Login
         </Button>
-      </div>
+      </motion.div>
     </Form>
   );
 };
