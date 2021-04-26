@@ -24,7 +24,6 @@ const Login = () => {
       setErrorMessage('');
       setUserDetails(response.data);
     } catch (error) {
-      console.log(error);
       if (error.response) {
         console.log('error', error.response.data);
         setErrorMessage(error.response.data);
