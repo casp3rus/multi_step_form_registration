@@ -32,7 +32,7 @@ const SecondStep = (props) => {
         transition={{ stiffness: 150 }}
       >
         {' '}
-        <Form.Group controlId='first_name'>
+        <Form.Group controlId='user_email'>
           <Form.Label>Email</Form.Label>
           <Form.Control
             type='email'
@@ -52,14 +52,14 @@ const SecondStep = (props) => {
             <p className='errorMsg'>{errors.user_email.message}</p>
           )}
         </Form.Group>
-        <Form.Group controlId='password'>
+        <Form.Group controlId='user_password'>
           <Form.Label>Password</Form.Label>
           <Form.Control
             type='password'
             name='user_password'
             placeholder='Choose a password'
             autoComplete='off'
-            {...register('password', {
+            {...register('user_password', {
               required: 'Password is required.',
               minLength: {
                 value: 6,
